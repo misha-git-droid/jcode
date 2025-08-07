@@ -19,12 +19,13 @@ public class BlockingQueue<T> {
         notify();
     }
 
-    public synchronized void dequeue() throws InterruptedException {
+    public synchronized T dequeue() throws InterruptedException {
         while (list.isEmpty()) {
             wait();
         }
-        list.removeFirst();
+        T value = list.removeFirst();
         notify();
+        return value;
     }
 
     public synchronized int size() {

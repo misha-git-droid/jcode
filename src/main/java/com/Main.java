@@ -6,7 +6,7 @@ public class Main {
 
         Thread producer = new Thread(() -> {
             try {
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 50; i++) {
                     blockingQueue.enqueue(i);
                 }
             } catch (InterruptedException e) {
@@ -18,7 +18,7 @@ public class Main {
 
         Thread consumer = new Thread(() -> {
            try {
-               for (int i = 0; i < 10; i++) {
+               for (int i = 0; i < 50; i++) {
                    blockingQueue.dequeue();
                }
            } catch (InterruptedException e) {
