@@ -1,0 +1,1 @@
+INSERT INTO department VALUES ('1','Backend'), ('2','Frontend'), ('3','Devops')
