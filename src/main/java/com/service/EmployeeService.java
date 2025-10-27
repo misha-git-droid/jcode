@@ -3,8 +3,9 @@ package com.service;
 import com.dto.request.EmployeeDtoIdRequest;
 import com.dto.request.EmployeeDtoRequest;
 import com.dto.response.ResponseDto;
-import com.exception.NotFoundException;
 import com.entity.Employee;
+import com.exception.DepartmentNotFoundException;
+import com.exception.EmployeeNotFoundException;
 import com.projection.EmployeeProjection;
 import com.repository.DepartmentRepository;
 import com.repository.EmployeeRepository;
@@ -26,8 +27,10 @@ public class EmployeeService {
 
     @Transactional
     public Employee save(EmployeeDtoRequest dtoRequest) {
-        if (!departmentRepository.existsById(dtoRequest.getDepartmentId()))
-            throw new NotFoundException("There is no department with id " + dtoRequest.getDepartmentId());
+        Long departmentId = dtoRequest.getDepartmentId();
+
+        if (!departmentRepository.existsById(departmentId))
+            throw new DepartmentNotFoundException(departmentId);
 
         Employee employee = new Employee(dtoRequest.getFirstName(), dtoRequest.getLastName(),
                 dtoRequest.getPosition(), dtoRequest.getSalary(), dtoRequest.getDepartmentId());
@@ -37,26 +40,38 @@ public class EmployeeService {
 
     @Transactional
     public Employee update(EmployeeDtoIdRequest dtoRequest) {
-        if (!employeeRepository.existsById(dtoRequest.getDepartmentId())) {
-            throw new NotFoundException("The employee with id " + dtoRequest.getId() + " not found");
+        Long employeeId = dtoRequest.getId();
+        Long departmentId = dtoRequest.getDepartmentId();
+
+        if (!employeeRepository.existsById(employeeId)) {
+            throw new EmployeeNotFoundException(employeeId);
         }
+
+        if (!employeeRepository.existsById(departmentId)) {
+            throw new DepartmentNotFoundException(departmentId);
+        }
+
         Employee employee = new Employee(dtoRequest.getFirstName(), dtoRequest.getLastName(),
                 dtoRequest.getPosition(), dtoRequest.getSalary(), dtoRequest.getDepartmentId());
+
         return employeeRepository.save(employee);
     }
 
     @Transactional
     public Employee findById(Long id) {
-        Optional<Employee> value = employeeRepository.findById(id);
-        if (value.isEmpty()) throw new NotFoundException("The employee with id " + id + " not found");
-        return value.get();
+        Optional<Employee> optional = employeeRepository.findById(id);
+
+        if (optional.isEmpty()) throw new EmployeeNotFoundException(id);
+
+        return optional.get();
     }
 
     @Transactional
     public ResponseDto delete(Long id) {
         if (!employeeRepository.existsById(id)) {
-            throw new NotFoundException("The employee with id " + id + " not found");
+            throw new EmployeeNotFoundException(id);
         }
+
         employeeRepository.deleteById(id);
         return new ResponseDto("The employee has been successfully deleted");
     }

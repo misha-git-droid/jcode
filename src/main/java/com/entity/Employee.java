@@ -1,17 +1,12 @@
 package com.entity;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-
-@Setter
-@Getter
 @Table(name = "EMPLOYEE")
 public class Employee {
     @Id
-    private String id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String position;
@@ -20,11 +15,34 @@ public class Employee {
 
     public Employee(String firstName, String lastName, String position,
                     Integer salary, Long departmentId) {
-        this.id = null;
         this.firstName = firstName;
         this.lastName = lastName;
         this.position = position;
         this.salary = salary;
         this.departmentId = departmentId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public Integer getSalary() {
+        return salary;
+    }
+
+    public Long getDepartmentId() {
+        return departmentId;
     }
 }
